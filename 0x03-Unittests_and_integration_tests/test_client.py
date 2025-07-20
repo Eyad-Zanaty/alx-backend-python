@@ -7,6 +7,9 @@ from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 import fixtures
 
+"""Unittest module for GithubOrgClient class"""
+from fixtures import TEST_PAYLOAD
+
 
 class TestGithubOrgClient(unittest.TestCase):
     """Unit tests for GithubOrgClient"""
@@ -109,3 +112,41 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("octocat")
         repos = client.public_repos(license="apache-2.0")
         self.assertEqual(repos, self.apache2_repos)
+    #!/usr/bin/env python3
+
+
+@parameterized_class(('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'), TEST_PAYLOAD)
+class TestGithubOrgClient(unittest.TestCase):
+    """Unit tests for the GithubOrgClient class"""
+
+    @patch('client.get_json')
+    def test_org(self, mock_get_json):
+        """Test that GithubOrgClient.org returns correct org data"""
+        mock_get_json.return_value = self.org_payload
+        client = GithubOrgClient("google")
+        self.assertEqual(client.org, self.org_payload)
+        mock_get_json.assert_called_once_with("https://api.github.com/orgs/google")
+
+    @patch('client.get_json')
+    def test_public_repos(self, mock_get_json):
+        """Test public_repos method returns expected repository list"""
+        mock_get_json.return_value = self.repos_payload
+        with patch.object(GithubOrgClient, 'org', new_callable=PropertyMock) as mock_org:
+            mock_org.return_value = self.org_payload
+            client = GithubOrgClient("google")
+            self.assertEqual(client.public_repos(), self.expected_repos)
+            mock_get_json.assert_called_once()
+
+    @patch('client.get_json')
+    def test_public_repos_with_license(self, mock_get_json):
+        """Test public_repos method returns repos with specific license"""
+        mock_get_json.return_value = self.repos_payload
+        with patch.object(GithubOrgClient, 'org', new_callable=PropertyMock) as mock_org:
+            mock_org.return_value = self.org_payload
+            client = GithubOrgClient("google")
+            self.assertEqual(
+                client.public_repos(license="apache-2.0"),
+                self.apache2_repos
+            )
+            mock_get_json.assert_called_once()
+
