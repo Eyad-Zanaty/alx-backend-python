@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 # ["user.delete()", "delete_user"]
 # ["Message.objects.filter", "delete()"]
 # ["select_related"]
+# ["cache_page", "60"]
 # Message.unread.unread_for_user
 # class UnreadMessagesManager
 # cache_page
@@ -58,6 +59,7 @@ def message_detail(request, message_id):
         'message': message,
         'history': history
     })
+
 
 
 
