@@ -4,7 +4,7 @@ from django.utils import timezone
 from .models import Message, Notification, MessageHistory
 from django.contrib.auth.models import User
 
-
+# ["user.delete()", "delete_user"], ["Message.objects.filter", "delete()"]
 @login_required
 def send_message(request):
     if request.method == 'POST':
@@ -52,3 +52,4 @@ def message_detail(request, message_id):
         'message': message,
         'history': history
     })
+
