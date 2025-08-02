@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 # ["user.delete()", "delete_user"]
 # ["Message.objects.filter", "delete()"]
 # ["select_related"]
+# Message.unread.unread_for_user
+# .only
 @login_required
 def send_message(request):
     if request.method == 'POST':
@@ -54,6 +56,7 @@ def message_detail(request, message_id):
         'message': message,
         'history': history
     })
+
 
 
 
