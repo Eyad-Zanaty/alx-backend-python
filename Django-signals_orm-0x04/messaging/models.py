@@ -22,9 +22,10 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    # ✅ Custom Manager
+    # ✅ edited Custom Manager
     objects = models.Manager()  # default
     unread = UnreadNotificationManager()  # custom
 
     def __str__(self):
         return f"Notification for {self.user.username} about message {self.message.id}"
+
